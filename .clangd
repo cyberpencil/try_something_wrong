@@ -1,0 +1,19 @@
+# clangd 项目配置：让 clangd 使用 MinGW-w64 的 gcc/g++ 作为驱动
+# 作用：clangd 会执行该驱动来提取真实的系统头文件搜索路径，
+#       否则在"没有 compile_commands.json"的情况下，clangd 会按 MSVC 目标回退解析，
+#       导致 stdio.h 等标准头文件报 "file not found"。
+# 注意：此处的路径必须与 settings.json 里的 --query-driver 白名单匹配才会被允许执行。
+
+# C 源文件（*.c）
+If:
+  PathMatch: .*\.c$
+CompileFlags:
+  Compiler: D:/mingw-w64/mingw64/bin/gcc.exe
+
+---
+
+# C++ 源文件（*.cpp / *.cc / *.cxx）
+If:
+  PathMatch: .*\.(cpp|cc|cxx)$
+CompileFlags:
+  Compiler: D:/mingw-w64/mingw64/bin/g++.exe
