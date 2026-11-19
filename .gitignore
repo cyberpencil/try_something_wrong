@@ -72,3 +72,8 @@ hexo/
 hexo-cli/
 # npm 安装时没能展开环境变量，在项目里生成了字面量目录
 /npm_env/
+
+*.js
+*.svg
+*.pyc
+.dsh-plugins

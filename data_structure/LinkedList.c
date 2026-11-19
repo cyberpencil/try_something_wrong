@@ -183,9 +183,80 @@ bool list_delete_at(LinkedList *list, size_t index){
 }
 
 /* 按值删除：删除第一个值为 value 的节点 */
-bool list_delete_value(LinkedList *list, int value);
+bool list_delete_value(LinkedList *list, int value){
+    if (list == NULL || list->head == NULL) {
+    return false;
+  }
+    if (list->head->next == NULL) {
+      return list_delete_head(list);
+    }
+  ListNode* prev = list->head;
+  while (prev != NULL) {
+      if (prev->next->data == value) {
+        prev->next = prev->next->next;
+        list->size--;
+        free(prev->next);
+        return true;
+      } else {
+        prev = prev->next;
+      }
+  } return false;
+}
+
+/* ==================== 查找与访问 ==================== */
+
+/* 按值查找节点，返回第一个匹配节点的指针；找不到返回 NULL */
+const ListNode *list_find_node(const LinkedList *list, int value){
+  if (list == NULL || list->head == NULL) {
+    return NULL;
+  }
+  ListNode* cur = list->head;
+  while (cur != NULL) {
+    if (cur->data == value) {
+      return cur;
+    } 
+      cur = cur->next;
+  }
+  return NULL;
+}
 
 
+/* 按值查找位置，返回第一个匹配节点的下标；找不到返回 -1 */
+int list_find_index(const LinkedList *list, int value){
+  if (list == NULL || list->head == NULL) {
+    return -1;
+  }
+  int index = 0;
+  for(ListNode* cur = list->head; cur != NULL; cur = cur->next, index++;){
+   if (cur->data == value) {
+    return index;
+   } 
+  }
+  return -1;
+}
+
+/*
+ * 获取第 index 个节点的值
+ * 合法范围：0 <= index < list_size(list)
+ * 成功返回 true，并通过 out_value 输出
+ */
+bool list_get(const LinkedList *list, size_t index, int *out_value);
+
+/*
+ * 修改第 index 个节点的值
+ * 合法范围：0 <= index < list_size(list)
+ */
+bool list_set(LinkedList *list, size_t index, int value);
+
+/* ==================== 遍历操作 ==================== */
+
+/* 遍历链表，对每个节点的值调用 visit 回调 */
+void list_traverse(const LinkedList *list, VisitFunc visit);
+
+/* ==================== 进阶操作 ==================== */
+
+/* 原地反转链表 */
+void list_reverse(LinkedList *list);
 
 
 int main() {
@@ -222,6 +293,9 @@ int main() {
   printf("list is empty: %d\n",list_is_empty(&list));
   printf("===================\n");
   list_delete_at(&list, 0);
+  list_print(&list);
+  printf("===================\n");
+  list_delete_value(&list, 2);
   list_print(&list);
   list_clear(&list);
   
